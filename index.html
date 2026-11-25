@@ -1,0 +1,819 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <script>
+        window.GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbye0-6XifWG_YG6DZG4OJISwutQyJ_Ti_dYHc5BzPRm8FkpASGXJWtxdN2wUmm0CbPiaA/exec';
+    </script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>לומדת בטיחות לתלמידי הנדסה יישומית</title>
+    <meta name="description" content="לומדת בטיחות לתלמידי הנדסה יישומית — הנחיות בטיחות במעבדה, מבדק הבנה וחתימה על הצהרת בטיחות.">
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="לומדת בטיחות לתלמידי הנדסה יישומית">
+    <meta property="og:title" content="לומדת בטיחות לתלמידי הנדסה יישומית">
+    <meta property="og:description" content="לומדת בטיחות לתלמידי הנדסה יישומית • למידה מודולרית לפי פרקי בטיחות (התחשמלות, כוויות והלחמות, שריפה), מבדק הבנה והצהרת תלמיד.">
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="לומדת בטיחות לתלמידי הנדסה יישומית">
+    <meta name="twitter:description" content="לומדת בטיחות לתלמידי הנדסה יישומית • הנחיות בטיחות במעבדה, מבדק הבנה וחתימה.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            background-color: #F8F7F4;
+            color: #1E293B;
+            font-family: 'Heebo', sans-serif;
+            overflow-x: hidden;
+        }
+        .fade-in {
+            animation: fadeIn 0.25s ease-out forwards;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(6px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @media print {
+            .no-print { display: none !important; }
+            body { background-color: #FFFFFF; }
+            .print-only-card { box-shadow: none !important; border: 1px solid #94A3B8 !important; }
+        }
+    </style>
+</head>
+<!-- Chosen Palette: Warm Safety & Engineering Light (#F8F7F4 warm stone background, #FFFFFF crisp card surfaces, #E2E8F0 subtle slate borders, #1D4ED8 royal blue for electrical chapter, #D97706 amber/orange for burns & soldering chapter, #DC2626 crimson for fire chapter, #059669 emerald for verified/signed status) -->
+<!-- Application Structure Plan: Modular 5-chapter learning structure decomposing laboratory safety into distinct, focused chapters with a gated progression requirement (score > 79), WhatsApp Open Graph preview metadata for Applied Engineering students, and automated Google Sheets + Google Drive signature submission webhook. -->
+<!-- Visualization & Content Choices: Source Documents ("כללי התנהלות במעבדה.docx" + Soldering Safety from "איך מלחימים נכון.pptx") -> Goal: Enforce mastery (>79 score) of laboratory safety rules and transmit signed student declarations + Canvas PNG signatures directly to the teacher's Google Sheet -> Library: Vanilla JS + Tailwind CSS + HTML5 Canvas + Fetch API. Confirming NO SVG and NO Mermaid JS. -->
+<body class="min-h-screen flex flex-col justify-between">
+
+    <header class="bg-white border-b border-slate-200 sticky top-0 z-40 shadow-sm no-print">
+        <div class="max-w-4xl mx-auto px-4 py-3.5 flex flex-col gap-3">
+            <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
+                <div class="flex items-center gap-2.5">
+                    <span class="inline-flex items-center justify-center w-9 h-9 rounded-xl bg-slate-900 text-white font-extrabold text-base">🛡️</span>
+                    <div>
+                        <h1 class="text-lg sm:text-xl font-extrabold text-slate-900">לומדת בטיחות לתלמידי הנדסה יישומית</h1>
+                        <p class="text-xs text-slate-500">הנחיות בטיחות במעבדה • קריאה, מעבר מבדק (ציון 80+) וחתימה</p>
+                    </div>
+                </div>
+                <div id="chapter-indicator" class="text-xs font-bold px-3 py-1.5 rounded-lg bg-slate-100 text-slate-700 self-start sm:self-auto">
+                    פרק 1 מתוך 5
+                </div>
+            </div>
+
+            <nav aria-label="פרקי הבטיחות" class="flex flex-wrap gap-1.5 bg-slate-100 p-1.5 rounded-xl border border-slate-200">
+                <button data-step="1" class="step-nav-btn flex-1 min-w-[110px] px-2.5 py-2 rounded-lg text-xs sm:text-sm font-bold bg-white text-blue-700 shadow-sm transition-all">
+                    ⚡ 1. התחשמלות
+                </button>
+                <button data-step="2" class="step-nav-btn flex-1 min-w-[130px] px-2.5 py-2 rounded-lg text-xs sm:text-sm font-semibold text-slate-600 hover:text-slate-900 transition-all">
+                    🔥 2. כוויות והלחמות
+                </button>
+                <button data-step="3" class="step-nav-btn flex-1 min-w-[130px] px-2.5 py-2 rounded-lg text-xs sm:text-sm font-semibold text-slate-600 hover:text-slate-900 transition-all">
+                    🧯 3. שריפה והתלקחות
+                </button>
+                <button data-step="4" class="step-nav-btn flex-1 min-w-[115px] px-2.5 py-2 rounded-lg text-xs sm:text-sm font-semibold text-slate-600 hover:text-slate-900 transition-all">
+                    📝 4. בדיקת הבנה
+                </button>
+                <button id="nav-step-5" data-step="5" class="step-nav-btn flex-1 min-w-[135px] px-2.5 py-2 rounded-lg text-xs sm:text-sm font-semibold text-slate-400 cursor-not-allowed transition-all" title="יש לקבל ציון מעל 79 בבדיקת ההבנה כדי לפתוח שלב זה">
+                    🔒 5. הצהרה וחתימה
+                </button>
+            </nav>
+        </div>
+    </header>
+
+    <main class="max-w-4xl w-full mx-auto px-4 py-6 flex-grow">
+
+        <section id="view-step-1" class="step-view space-y-5 fade-in">
+            <div class="bg-white rounded-2xl border-r-4 border-r-blue-600 border border-slate-200 p-5 sm:p-6 shadow-sm">
+                <div class="flex items-center gap-3 mb-2">
+                    <span class="inline-flex items-center justify-center w-10 h-10 rounded-xl bg-blue-100 text-blue-700 text-xl">⚡</span>
+                    <div>
+                        <span class="text-xs font-bold text-blue-700 uppercase tracking-wide">פרק בטיחות 1</span>
+                        <h2 class="text-xl sm:text-2xl font-extrabold text-slate-900">סכנת התחשמלות ובטיחות בחשמל</h2>
+                    </div>
+                </div>
+                <p class="text-sm text-slate-600 leading-relaxed">
+                    במעבדת האלקטרוניקה אנו עובדים בסביבת ספקי כוח, שנאים ושקעי מתח רשת (220V). פרק זה מגדיר את כללי המניעה והתגובה המיידית במקרה של התחשמלות.
+                </p>
+            </div>
+
+            <div class="bg-white rounded-2xl border border-slate-200 p-5 shadow-sm">
+                <h3 class="text-base sm:text-lg font-extrabold text-slate-900 mb-3">כללי מניעה בעבודה עם חשמל וציוד</h3>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm">
+                    <div class="p-4 rounded-xl bg-blue-50/50 border border-blue-200 flex items-start gap-3">
+                        <span class="text-lg">🔌</span>
+                        <div>
+                            <div class="font-extrabold text-slate-900">איסור חיבור למתח רשת (220V)</div>
+                            <p class="text-xs text-slate-700 mt-1">אין לחבר את הציוד או הניסוי למתח רשת (220 וולט) ללא בדיקה ואישור של אחראי המעבדה.</p>
+                        </div>
+                    </div>
+                    <div class="p-4 rounded-xl bg-blue-50/50 border border-blue-200 flex items-start gap-3">
+                        <span class="text-lg">🥤</span>
+                        <div>
+                            <div class="font-extrabold text-slate-900">הרחקת נוזלים ואוכל</div>
+                            <p class="text-xs text-slate-700 mt-1">אין לאכול או לשתות במעבדה — שפיכת נוזל על ציוד חשמלי עלולה לגרום לקצר ולהתחשמלות מיידית.</p>
+                        </div>
+                    </div>
+                    <div class="p-4 rounded-xl bg-blue-50/50 border border-blue-200 flex items-start gap-3">
+                        <span class="text-lg">👟</span>
+                        <div>
+                            <div class="font-extrabold text-slate-900">הנעלה מבודדת וסגורה</div>
+                            <p class="text-xs text-slate-700 mt-1">אסור להגיע למעבדה עם כפכפים — יש לנעול נעליים סגורות בלבד.</p>
+                        </div>
+                    </div>
+                    <div class="p-4 rounded-xl bg-blue-50/50 border border-blue-200 flex items-start gap-3">
+                        <span class="text-lg">🔧</span>
+                        <div>
+                            <div class="font-extrabold text-slate-900">תקינות כבלים וציוד</div>
+                            <p class="text-xs text-slate-700 mt-1">אין לבצע שינויים, אלתורים או שימוש לרעה בציוד החשמלי שמסופק לעבודה במעבדה.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-blue-950 text-white rounded-2xl p-5 sm:p-6 shadow-sm">
+                <div class="flex items-center gap-2 mb-3">
+                    <span class="text-xl">🚨</span>
+                    <h3 class="text-base sm:text-lg font-extrabold">נוהל חירום מחייב במקרה של התחשמלות</h3>
+                </div>
+                <ol class="space-y-2.5 text-sm">
+                    <li class="flex items-start gap-3 bg-blue-900/70 p-3 rounded-xl border border-blue-800">
+                        <span class="inline-flex items-center justify-center w-6 h-6 rounded-full bg-red-500 text-white font-extrabold text-xs shrink-0 mt-0.5">1</span>
+                        <span><strong>ניתוק הזרם מיד:</strong> יש לנתק את הזרם במעבדה ע"י לחיצה מיידית על <strong>לחצן החירום</strong>.</span>
+                    </li>
+                    <li class="flex items-start gap-3 bg-blue-900/70 p-3 rounded-xl border border-blue-800">
+                        <span class="inline-flex items-center justify-center w-6 h-6 rounded-full bg-amber-500 text-slate-950 font-extrabold text-xs shrink-0 mt-0.5">2</span>
+                        <span><strong>הפרדה באמצעים מבודדים:</strong> יש להפריד את המתחשמל ממקור הזרם ע"י שימוש ב<strong>אמצעים מבודדים</strong> בלבד (עץ יבש, פלסטיק עבה — לעולם לא בידיים חשופות!).</span>
+                    </li>
+                    <li class="flex items-start gap-3 bg-blue-900/70 p-3 rounded-xl border border-blue-800">
+                        <span class="inline-flex items-center justify-center w-6 h-6 rounded-full bg-emerald-500 text-slate-950 font-extrabold text-xs shrink-0 mt-0.5">3</span>
+                        <span><strong>דיווח וסיוע:</strong> יש להישמע להוראות אחראי המעבדה ולסייע בכל הנדרש.</span>
+                    </li>
+                </ol>
+            </div>
+
+            <div class="flex justify-end pt-1">
+                <button onclick="goToStep(2)" class="px-5 py-3 rounded-xl bg-blue-700 hover:bg-blue-800 text-white font-bold text-sm shadow-sm transition-all">
+                    המשך לפרק 2: כוויות מציוד חם והלחמות ⬅
+                </button>
+            </div>
+        </section>
+
+        <section id="view-step-2" class="step-view hidden space-y-5 fade-in">
+            <div class="bg-white rounded-2xl border-r-4 border-r-amber-500 border border-slate-200 p-5 sm:p-6 shadow-sm">
+                <div class="flex items-center gap-3 mb-2">
+                    <span class="inline-flex items-center justify-center w-10 h-10 rounded-xl bg-amber-100 text-amber-700 text-xl">🔥</span>
+                    <div>
+                        <span class="text-xs font-bold text-amber-700 uppercase tracking-wide">פרק בטיחות 2</span>
+                        <h2 class="text-xl sm:text-2xl font-extrabold text-slate-900">כוויות מציוד חם ובטיחות בהלחמות</h2>
+                    </div>
+                </div>
+                <p class="text-sm text-slate-600 leading-relaxed">
+                    מלחמים מגיעים לטמפרטורה של <strong>300–400°C</strong>, וגם אקדחי דבק חם ורכיבים מולחמים עלולים לגרום לכוויות קשות תוך שבריר שנייה. פרק זה מרכז את כל הכללים לעבודה בטוחה עם ציוד חם.
+                </p>
+            </div>
+
+            <div class="bg-white rounded-2xl border border-slate-200 p-5 shadow-sm">
+                <h3 class="text-base sm:text-lg font-extrabold text-slate-900 mb-3">כללי בטיחות עם מלחמים ואקדחי דבק</h3>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm">
+                    <div class="p-4 rounded-xl bg-amber-50/60 border border-amber-200 flex items-start gap-3">
+                        <span class="text-lg">🌡️</span>
+                        <div>
+                            <div class="font-extrabold text-slate-900">אחיזה בידית והנחה על מעמד בלבד</div>
+                            <p class="text-xs text-slate-700 mt-1">לעולם לא לגעת בראש המתכת החם! אוחזים בידית המבודדת בלבד, ומניחים את המלחם אך ורק על המעמד הייעודי.</p>
+                        </div>
+                    </div>
+                    <div class="p-4 rounded-xl bg-amber-50/60 border border-amber-200 flex items-start gap-3">
+                        <span class="text-lg">👀</span>
+                        <div>
+                            <div class="font-extrabold text-slate-900">אין להשאיר ציוד חם ללא השגחה</div>
+                            <p class="text-xs text-slate-700 mt-1">אין להשאיר מלחמים, אקדחי דבק חם או כל ציוד מחובר לחשמל בעמדה ללא השגחה.</p>
+                        </div>
+                    </div>
+                    <div class="p-4 rounded-xl bg-amber-50/60 border border-amber-200 flex items-start gap-3">
+                        <span class="text-lg">🥽</span>
+                        <div>
+                            <div class="font-extrabold text-slate-900">משקפי מגן חובה</div>
+                            <p class="text-xs text-slate-700 mt-1">ניתזי בדיל חם או קצוות חוטים שנחתכים עלולים לפגוע בעיניים — מרכיבים משקפי מגן לאורך כל ההלחמה.</p>
+                        </div>
+                    </div>
+                    <div class="p-4 rounded-xl bg-amber-50/60 border border-amber-200 flex items-start gap-3">
+                        <span class="text-lg">💨</span>
+                        <div>
+                            <div class="font-extrabold text-slate-900">אוורור ושאיבת עשן</div>
+                            <p class="text-xs text-slate-700 mt-1">עשן הבדיל והפלקס רעיל — יש לעבוד תחת מפוח אוורור פועל ולהימנע מהתקרבות יתר לאדי ההלחמה.</p>
+                        </div>
+                    </div>
+                    <div class="p-4 rounded-xl bg-amber-50/60 border border-amber-200 flex items-start gap-3 sm:col-span-2">
+                        <span class="text-lg">🔌</span>
+                        <div>
+                            <div class="font-extrabold text-slate-900">ניתוק מהחשמל ושטיפת ידיים בסיום</div>
+                            <p class="text-xs text-slate-700 mt-1">בסיום העבודה חובה לכבות ולנתק את תחנת ההלחמה ואקדח הדבק מהחשמל, להמתין להתקררות ולשטוף ידיים בסבון לאחר מגע בבדיל.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-amber-950 text-white rounded-2xl p-5 shadow-sm">
+                <div class="flex items-center gap-2 mb-2">
+                    <span class="text-xl">🩹</span>
+                    <h3 class="text-base font-extrabold">מה עושים במקרה של כוויה?</h3>
+                </div>
+                <p class="text-xs sm:text-sm text-amber-100 leading-relaxed">
+                    מניחים מיד את המלחם על המעמד, מקררים את האזור שנכווה במים זורמים פושרים/קרירים למשך מספר דקות, ומדווחים מיד לאחראי המעבדה לקבלת טיפול מתאים.
+                </p>
+            </div>
+
+            <div class="flex items-center justify-between pt-1">
+                <button onclick="goToStep(1)" class="px-4 py-2.5 rounded-xl border border-slate-300 bg-white hover:bg-slate-50 text-slate-700 font-bold text-sm transition-all">
+                    ➡ חזרה לפרק 1: התחשמלות
+                </button>
+                <button onclick="goToStep(3)" class="px-5 py-3 rounded-xl bg-amber-600 hover:bg-amber-700 text-white font-bold text-sm shadow-sm transition-all">
+                    המשך לפרק 3: שריפה והתלקחות ⬅
+                </button>
+            </div>
+        </section>
+
+        <section id="view-step-3" class="step-view hidden space-y-5 fade-in">
+            <div class="bg-white rounded-2xl border-r-4 border-r-red-600 border border-slate-200 p-5 sm:p-6 shadow-sm">
+                <div class="flex items-center gap-3 mb-2">
+                    <span class="inline-flex items-center justify-center w-10 h-10 rounded-xl bg-red-100 text-red-700 text-xl">🧯</span>
+                    <div>
+                        <span class="text-xs font-bold text-red-700 uppercase tracking-wide">פרק בטיחות 3</span>
+                        <h2 class="text-xl sm:text-2xl font-extrabold text-slate-900">שריפה והתלקחות של ציוד</h2>
+                    </div>
+                </div>
+                <p class="text-sm text-slate-600 leading-relaxed">
+                    קצר חשמלי, חימום יתר או קירבה של חומרים דליקים למלחם עלולים לגרום להתלקחות. פרק זה מפרט את כללי המניעה ואת סדר הפעולות המחייב בעת שריפה במעבדה.
+                </p>
+            </div>
+
+            <div class="bg-white rounded-2xl border border-slate-200 p-5 shadow-sm">
+                <h3 class="text-base sm:text-lg font-extrabold text-slate-900 mb-3">כללי מניעת אש במעבדה</h3>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm">
+                    <div class="p-4 rounded-xl bg-red-50/50 border border-red-200 flex items-start gap-3">
+                        <span class="text-lg">🚭</span>
+                        <div>
+                            <div class="font-extrabold text-slate-900">איסור עישון מוחלט</div>
+                            <p class="text-xs text-slate-700 mt-1">אין לעשן בשטח המעבדה או בקרבתה.</p>
+                        </div>
+                    </div>
+                    <div class="p-4 rounded-xl bg-red-50/50 border border-red-200 flex items-start gap-3">
+                        <span class="text-lg">🕯️</span>
+                        <div>
+                            <div class="font-extrabold text-slate-900">איסור אש גלויה</div>
+                            <p class="text-xs text-slate-700 mt-1">אין להשתמש במקור אש גלוי (מצית, גפרור, מבער) ללא אישור והשגחה של אחראי המעבדה.</p>
+                        </div>
+                    </div>
+                    <div class="p-4 rounded-xl bg-red-50/50 border border-red-200 flex items-start gap-3 sm:col-span-2">
+                        <span class="text-lg">🧹</span>
+                        <div>
+                            <div class="font-extrabold text-slate-900">סביבת עבודה נקייה מחומרים דליקים</div>
+                            <p class="text-xs text-slate-700 mt-1">יש להרחיק ניירות, אלכוהול, חומרי ניקוי וכבלים מיותרים מאזור המלחם החם ומקורות המתח.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-red-950 text-white rounded-2xl p-5 sm:p-6 shadow-sm">
+                <div class="flex items-center gap-2 mb-3">
+                    <span class="text-xl">🚨</span>
+                    <h3 class="text-base sm:text-lg font-extrabold">נוהל חירום מחייב במקרה של שריפה</h3>
+                </div>
+                <ol class="space-y-2.5 text-sm">
+                    <li class="flex items-start gap-3 bg-red-900/70 p-3 rounded-xl border border-red-800">
+                        <span class="inline-flex items-center justify-center w-6 h-6 rounded-full bg-white text-red-900 font-extrabold text-xs shrink-0 mt-0.5">1</span>
+                        <span><strong>ניתוק הזרם:</strong> יש לנתק את הזרם במעבדה ע"י לחיצה מיידית על <strong>לחצן החירום</strong>.</span>
+                    </li>
+                    <li class="flex items-start gap-3 bg-red-900/70 p-3 rounded-xl border border-red-800">
+                        <span class="inline-flex items-center justify-center w-6 h-6 rounded-full bg-white text-red-900 font-extrabold text-xs shrink-0 mt-0.5">2</span>
+                        <span><strong>אוורור המעבדה:</strong> יש לפתוח חלונות ודלתות לאוורור המעבדה ולפינוי עשן.</span>
+                    </li>
+                    <li class="flex items-start gap-3 bg-red-900/70 p-3 rounded-xl border border-red-800">
+                        <span class="inline-flex items-center justify-center w-6 h-6 rounded-full bg-white text-red-900 font-extrabold text-xs shrink-0 mt-0.5">3</span>
+                        <span><strong>שימוש במטפה אבקה:</strong> יש להשתמש ב<strong>מטפה אבקה</strong> ו/או מטפה שמתאים לכיבוי יעיל של האש (לעולם לא מים על ציוד חשמלי!).</span>
+                    </li>
+                    <li class="flex items-start gap-3 bg-red-900/70 p-3 rounded-xl border border-red-800">
+                        <span class="inline-flex items-center justify-center w-6 h-6 rounded-full bg-white text-red-900 font-extrabold text-xs shrink-0 mt-0.5">4</span>
+                        <span><strong>שמיכת כיבוי:</strong> ניתן להשתמש ב<strong>שמיכות לחניקת האש</strong> במידה וניתן.</span>
+                    </li>
+                    <li class="flex items-start gap-3 bg-red-900/70 p-3 rounded-xl border border-red-800">
+                        <span class="inline-flex items-center justify-center w-6 h-6 rounded-full bg-white text-red-900 font-extrabold text-xs shrink-0 mt-0.5">5</span>
+                        <span><strong>הישמעות להוראות:</strong> יש להישמע להוראות אחראי המעבדה ולסייע ע"פ הצורך.</span>
+                    </li>
+                </ol>
+            </div>
+
+            <div class="flex items-center justify-between pt-1">
+                <button onclick="goToStep(2)" class="px-4 py-2.5 rounded-xl border border-slate-300 bg-white hover:bg-slate-50 text-slate-700 font-bold text-sm transition-all">
+                    ➡ חזרה לפרק 2: כוויות והלחמות
+                </button>
+                <button onclick="goToStep(4)" class="px-5 py-3 rounded-xl bg-red-600 hover:bg-red-700 text-white font-bold text-sm shadow-sm transition-all">
+                    המשך לפרק 4: בדיקת הבנה (נדרש ציון מעל 79) ⬅
+                </button>
+            </div>
+        </section>
+
+        <section id="view-step-4" class="step-view hidden space-y-5 fade-in">
+            <div class="bg-white rounded-2xl border border-slate-200 p-5 shadow-sm">
+                <div class="flex flex-wrap items-center justify-between gap-2 mb-1.5">
+                    <h2 class="text-lg sm:text-xl font-extrabold text-slate-900">פרק 4: בדיקת הבנה לכל פרקי הבטיחות</h2>
+                    <span id="check-score-pill" class="px-3 py-1 rounded-full bg-blue-50 text-blue-700 text-xs font-bold">ציון נוכחי: 0 (0 מתוך 6)</span>
+                </div>
+                <p class="text-sm text-slate-600">
+                    ענו על כל 6 השאלות. <strong>תנאי מעבר לטופס החתימה: ציון מעל 79</strong> (לפחות 5 תשובות נכונות מתוך 6).
+                </p>
+            </div>
+
+            <div id="safety-quiz-list" class="space-y-4">
+            </div>
+
+            <div id="quiz-gate-banner" class="bg-white rounded-2xl border border-slate-200 p-5 shadow-sm">
+                <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+                    <div>
+                        <div id="gate-title" class="font-extrabold text-base text-slate-900">🔒 טופס החתימה נעול עד להשלמת המבדק בציון 80 ומעלה</div>
+                        <p id="gate-desc" class="text-xs sm:text-sm text-slate-600 mt-1">השיבו על כל 6 השאלות שלמעלה כדי לבדוק זכאות לחתימה.</p>
+                    </div>
+                    <div class="flex items-center gap-2 shrink-0">
+                        <button type="button" id="retake-quiz-btn" onclick="resetSafetyQuiz()" class="hidden px-4 py-2.5 rounded-xl bg-amber-600 hover:bg-amber-700 text-white font-bold text-sm shadow-sm transition-all">
+                            🔄 בצע מבחן מחדש
+                        </button>
+                        <button type="button" id="proceed-sign-btn" onclick="goToStep(5)" disabled class="px-5 py-3 rounded-xl bg-slate-200 text-slate-400 font-bold text-sm cursor-not-allowed transition-all">
+                            🔒 המשך לטופס החתימה
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flex items-center justify-start pt-1">
+                <button onclick="goToStep(3)" class="px-4 py-2.5 rounded-xl border border-slate-300 bg-white hover:bg-slate-50 text-slate-700 font-bold text-sm transition-all">
+                    ➡ חזרה לפרק 3: שריפה והתלקחות
+                </button>
+            </div>
+        </section>
+
+        <section id="view-step-5" class="step-view hidden space-y-5 fade-in">
+            <div class="bg-white rounded-2xl border border-slate-200 p-6 sm:p-8 shadow-sm print-only-card">
+                <div class="border-b border-slate-200 pb-4 mb-5 flex items-center justify-between">
+                    <div>
+                        <span class="inline-block px-2.5 py-0.5 rounded-md bg-emerald-100 text-emerald-900 text-xs font-bold mb-1">פרק 5 • אושר למעבר (ציון מבדק: <span id="approved-score-badge"></span>)</span>
+                        <h2 class="text-xl sm:text-2xl font-extrabold text-slate-900">הצהרת תדריך בטיחות לחתימת התלמיד</h2>
+                    </div>
+                    <span class="text-3xl">✍️</span>
+                </div>
+
+                <div class="p-4 sm:p-5 rounded-xl bg-slate-50 border border-slate-200 text-sm sm:text-base text-slate-800 leading-relaxed mb-6">
+                    "אני, החתום/ה מטה, מצהיר/ה בזה, כי קיבלתי היום הדרכה בטיחותית וקראתי את הנהלים ותקנון המעבדות (לרבות פרקי ההתחשמלות, כוויות והלחמות, ושריפה והתלקחות), וכי הובאו לידיעתי הסיכונים במעבדות השונות, וברורים לי הסיכונים האפשריים בשטח המעבדות.
+                    <br><br>
+                    הריני מתחייב/ת בזה למלא אחר דרישות הבטיחות והגיהות, סדרי העבודה והמשמעת הנהוגים במעבדות ולנהוג בהתאם להוראות הקיימות ואלה שיהיו.
+                    <br><br>
+                    הסכנה הכרוכה באי מילוי הוראות בטיחות אלה הוסברה וידועה לי היטב."
+                </div>
+
+                <form id="declaration-form" class="space-y-4">
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div>
+                            <label for="student-name" class="block text-xs font-bold text-slate-700 mb-1">שם התלמיד/ה המלא *</label>
+                            <input id="student-name" type="text" required placeholder="הקלידו שם פרטי ושם משפחה" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 bg-white text-sm focus:outline-none focus:border-blue-600">
+                        </div>
+                        <div>
+                            <label for="student-id" class="block text-xs font-bold text-slate-700 mb-1">תעודת זהות (ת"ז) *</label>
+                            <input id="student-id" type="text" inputmode="numeric" required placeholder="9 ספרות" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 bg-white text-sm focus:outline-none focus:border-blue-600">
+                        </div>
+                        <div>
+                            <label for="student-class" class="block text-xs font-bold text-slate-700 mb-1">כיתה *</label>
+                            <input id="student-class" type="text" required placeholder="לדוגמה: י' 2" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 bg-white text-sm focus:outline-none focus:border-blue-600">
+                        </div>
+                        <div>
+                            <label for="sign-date" class="block text-xs font-bold text-slate-700 mb-1">תאריך *</label>
+                            <input id="sign-date" type="date" required class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 bg-white text-sm focus:outline-none focus:border-blue-600">
+                        </div>
+                    </div>
+
+                    <div>
+                        <div class="flex items-center justify-between mb-1">
+                            <label class="text-xs font-bold text-slate-700">חתימת התלמיד/ה (חתמו באמצעות העכבר או האצבע) *</label>
+                            <button type="button" id="clear-sig-btn" class="text-xs text-red-600 hover:underline font-semibold no-print">נקה חתימה ✕</button>
+                        </div>
+                        <div class="rounded-xl border-2 border-dashed border-slate-300 bg-slate-50 overflow-hidden">
+                            <canvas id="signature-canvas" width="600" height="140" class="w-full h-32 touch-none cursor-crosshair block"></canvas>
+                        </div>
+                    </div>
+
+                    <div id="form-error-msg" class="hidden p-3 rounded-xl bg-red-50 border border-red-200 text-xs font-bold text-red-700">
+                    </div>
+
+                    <div id="signed-confirmation-box" class="hidden p-4 rounded-xl bg-emerald-50 border border-emerald-300 text-emerald-950 fade-in">
+                        <div class="font-extrabold text-base mb-1">✅ ההצהרה נחתמה ואושרה בהצלחה!</div>
+                        <p id="signed-summary-text" class="text-xs sm:text-sm leading-relaxed"></p>
+                        <div id="cloud-sync-status" class="mt-2 text-xs font-bold text-blue-800"></div>
+                    </div>
+
+                    <div class="flex flex-wrap items-center justify-between gap-3 pt-2 no-print">
+                        <button type="button" onclick="goToStep(4)" class="px-4 py-2.5 rounded-xl border border-slate-300 bg-white hover:bg-slate-50 text-slate-700 font-bold text-sm transition-all">
+                            ➡ חזרה לבדיקת הבנה
+                        </button>
+                        <div class="flex gap-2">
+                            <button type="button" id="print-btn" onclick="window.print()" class="hidden px-4 py-2.5 rounded-xl border border-slate-300 bg-white hover:bg-slate-50 text-slate-800 font-bold text-sm transition-all">
+                                🖨️ הדפס / שמור כ-PDF
+                            </button>
+                            <button type="submit" id="submit-declaration-btn" class="px-6 py-3 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold text-sm shadow-sm transition-all">
+                                אשר וחתום על הצהרת הבטיחות ✓
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="bg-white border-t border-slate-200 py-3.5 mt-8 no-print">
+        <div class="max-w-4xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between text-xs text-slate-500 gap-1">
+            <span>מעבדת אלקטרוניקה • לומדת בטיחות לתלמידי הנדסה יישומית</span>
+            <span>העבודה במעבדה מותנית במעבר מבדק הבטיחות (ציון מעל 79) וחתימה על ההצהרה</span>
+        </div>
+    </footer>
+
+    <script>
+        const safetyQuestions = [
+            {
+                chapterTag: 'פרק 1: התחשמלות',
+                q: 'מתי מותר לחבר ציוד או ניסוי למתח רשת (220 וולט)?',
+                options: [
+                    'בכל שלב במהלך הניסוי',
+                    'רק לאחר בדיקה ואישור של אחראי המעבדה',
+                    'כאשר עובדים בזוגות בלבד'
+                ],
+                correct: 1,
+                explanation: 'אין לחבר את הציוד או הניסוי למתח רשת (220 וולט) ללא אישור מפורש של אחראי המעבדה.'
+            },
+            {
+                chapterTag: 'פרק 1: התחשמלות',
+                q: 'מה יש לעשות מיד במקרה של התחשמלות במעבדה?',
+                options: [
+                    'למשוך את המתחשמל מיד בידיים חשופות',
+                    'לנתק את הזרם ע"י לחיצה על לחצן החירום ולהפריד את המתחשמל באמצעים מבודדים',
+                    'לשפוך מים על מקור המתח'
+                ],
+                correct: 1,
+                explanation: 'במקרה של התחשמלות חובה ללחוץ מיד על לחצן החירום לניתוק הזרם, ולהפריד את הנפגע ממקור הזרם באמצעות אמצעים מבודדים בלבד.'
+            },
+            {
+                chapterTag: 'פרק 2: כוויות והלחמות',
+                q: 'אילו אמצעי מיגון וסביבה נדרשים בעת עבודה עם מלחם?',
+                options: [
+                    'משקפי מגן ועבודה תחת מפוח אוורור (שואב עשן) פועל',
+                    'כפפות בד עבות בלבד ללא צורך באוורור',
+                    'אין צורך במשקפי מגן אם העבודה קצרה'
+                ],
+                correct: 0,
+                explanation: 'בעת הלחמה חובה להרכיב משקפי מגן (להגנה מניתזי בדיל חם) ולעבוד תחת מפוח אוורור כי עשן הבדיל רעיל.'
+            },
+            {
+                chapterTag: 'פרק 2: כוויות והלחמות',
+                q: 'היכן מניחים מלחם חם או אקדח דבק בזמן הפסקה, ומה עושים בסיום העבודה?',
+                options: [
+                    'מניחים על השולחן ליד הלוח, ומשאירים דולק לתלמיד הבא',
+                    'מניחים על המעמד הייעודי בלבד, לא משאירים ללא השגחה, ובסיום מנתקים מהחשמל ושוטפים ידיים',
+                    'מחזיקים ביד השנייה בזמן שמסדרים את הרכיבים'
+                ],
+                correct: 1,
+                explanation: 'ראש המלחם מגיע ל-300–400°C — מניחים אותו אך ורק על המעמד הייעודי, לא משאירים ציוד חם ללא השגחה, ובסיום מנתקים מהחשמל ושוטפים ידיים.'
+            },
+            {
+                chapterTag: 'פרק 3: שריפה והתלקחות',
+                q: 'מה הדין לגבי עישון ושימוש במקור אש גלוי במעבדה?',
+                options: [
+                    'מותר להשתמש במצית לצורך כיווץ שרוולי בידוד ללא אישור',
+                    'אין לעשן במעבדה, ואין להשתמש במקור אש גלוי ללא אישור והשגחה של אחראי המעבדה',
+                    'מותר לעשן ליד חלון פתוח'
+                ],
+                correct: 1,
+                explanation: 'חל איסור מוחלט לעשן במעבדה, ואין להשתמש במקור אש גלוי ללא אישור והשגחה של אחראי המעבדה.'
+            },
+            {
+                chapterTag: 'פרק 3: שריפה והתלקחות',
+                q: 'איזה מטפה מתאים לכיבוי שריפה במעבדה, ואילו פעולות נוספות נדרשות?',
+                options: [
+                    'מטפה אבקה (או שמיכת כיבוי), יחד עם לחיצה על לחצן החירום ופתיחת חלונות ודלתות לאוורור',
+                    'התזת מים ישירות על לוח החשמל',
+                    'סגירת כל החלונות והדלתות והשארת המתח מחובר'
+                ],
+                correct: 0,
+                explanation: 'במקרה שריפה מנתקים זרם בלחצן החירום, פותחים חלונות ודלתות לאוורור, ומשתמשים במטפה אבקה מתאים או בשמיכה לחניקת האש.'
+            }
+        ];
+
+        const activeStyles = {
+            1: 'step-nav-btn flex-1 min-w-[110px] px-2.5 py-2 rounded-lg text-xs sm:text-sm font-bold bg-white text-blue-700 shadow-sm transition-all',
+            2: 'step-nav-btn flex-1 min-w-[130px] px-2.5 py-2 rounded-lg text-xs sm:text-sm font-bold bg-white text-amber-700 shadow-sm transition-all',
+            3: 'step-nav-btn flex-1 min-w-[130px] px-2.5 py-2 rounded-lg text-xs sm:text-sm font-bold bg-white text-red-700 shadow-sm transition-all',
+            4: 'step-nav-btn flex-1 min-w-[115px] px-2.5 py-2 rounded-lg text-xs sm:text-sm font-bold bg-white text-slate-900 shadow-sm transition-all',
+            5: 'step-nav-btn flex-1 min-w-[135px] px-2.5 py-2 rounded-lg text-xs sm:text-sm font-bold bg-white text-emerald-700 shadow-sm transition-all'
+        };
+
+        const inactiveClass = 'step-nav-btn flex-1 min-w-[110px] px-2.5 py-2 rounded-lg text-xs sm:text-sm font-semibold text-slate-600 hover:text-slate-900 transition-all';
+        const lockedStep5Class = 'step-nav-btn flex-1 min-w-[135px] px-2.5 py-2 rounded-lg text-xs sm:text-sm font-semibold text-slate-400 cursor-not-allowed transition-all';
+
+        let currentStep = 1;
+        const quizState = new Array(safetyQuestions.length).fill(null);
+        let hasSigned = false;
+
+        function getQuizStats() {
+            const answeredCount = quizState.filter(v => v !== null).length;
+            const correctCount = quizState.reduce((acc, val, idx) => acc + (val === safetyQuestions[idx].correct ? 1 : 0), 0);
+            const scorePercent = Math.round((correctCount / safetyQuestions.length) * 100);
+            const allAnswered = answeredCount === safetyQuestions.length;
+            const passed = allAnswered && scorePercent > 79;
+            return { answeredCount, correctCount, scorePercent, allAnswered, passed };
+        }
+
+        function goToStep(stepNum) {
+            if (stepNum === 5) {
+                const { passed } = getQuizStats();
+                if (!passed) {
+                    goToStep(4);
+                    const banner = document.getElementById('quiz-gate-banner');
+                    banner.classList.add('ring-2', 'ring-red-400');
+                    setTimeout(() => banner.classList.remove('ring-2', 'ring-red-400'), 1200);
+                    return;
+                }
+            }
+
+            currentStep = stepNum;
+            document.querySelectorAll('.step-view').forEach(el => el.classList.add('hidden'));
+            document.getElementById(`view-step-${stepNum}`).classList.remove('hidden');
+            document.getElementById('chapter-indicator').textContent = `פרק ${stepNum} מתוך 5`;
+
+            const { passed } = getQuizStats();
+            document.querySelectorAll('.step-nav-btn').forEach(btn => {
+                const s = Number(btn.dataset.step);
+                if (s === 5 && !passed) {
+                    btn.className = lockedStep5Class;
+                } else {
+                    btn.className = (s === stepNum) ? activeStyles[s] : inactiveClass;
+                }
+            });
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        document.querySelectorAll('.step-nav-btn').forEach(btn => {
+            btn.addEventListener('click', () => goToStep(Number(btn.dataset.step)));
+        });
+
+        function renderSafetyQuiz() {
+            const container = document.getElementById('safety-quiz-list');
+            container.innerHTML = '';
+
+            safetyQuestions.forEach((item, qIdx) => {
+                const userChoice = quizState[qIdx];
+                const isLocked = userChoice !== null;
+                const card = document.createElement('div');
+                card.className = 'bg-white rounded-2xl border border-slate-200 p-5 shadow-sm';
+
+                const optionsHtml = item.options.map((opt, oIdx) => {
+                    let btnClass = 'w-full text-right p-3 rounded-xl border text-xs sm:text-sm font-medium transition-all ';
+                    if (!isLocked) {
+                        btnClass += 'border-slate-200 bg-slate-50 hover:border-blue-500 hover:bg-blue-50/40 text-slate-800 cursor-pointer';
+                    } else if (oIdx === item.correct) {
+                        btnClass += 'border-emerald-500 bg-emerald-50 text-emerald-950 font-bold cursor-default';
+                    } else if (oIdx === userChoice) {
+                        btnClass += 'border-red-400 bg-red-50 text-red-950 font-semibold cursor-default';
+                    } else {
+                        btnClass += 'border-slate-200 bg-white text-slate-400 opacity-70 cursor-default';
+                    }
+                    return `<button type="button" data-q="${qIdx}" data-o="${oIdx}" ${isLocked ? 'disabled' : ''} class="${btnClass}">${opt}</button>`;
+                }).join('');
+
+                let feedbackHtml = '';
+                if (isLocked) {
+                    const isRight = userChoice === item.correct;
+                    feedbackHtml = `
+                        <div class="mt-3 p-3 rounded-xl text-xs ${isRight ? 'bg-emerald-50 border border-emerald-200 text-emerald-900' : 'bg-red-50 border border-red-200 text-red-900'}">
+                            <strong>${isRight ? '✓ נכון!' : '✕ שגוי:'}</strong> ${item.explanation}
+                        </div>
+                    `;
+                }
+
+                card.innerHTML = `
+                    <span class="inline-block px-2 py-0.5 rounded bg-slate-100 text-slate-600 text-[11px] font-bold mb-2">${item.chapterTag}</span>
+                    <div class="font-bold text-slate-900 text-sm sm:text-base mb-3">${qIdx + 1}. ${item.q}</div>
+                    <div class="space-y-2">${optionsHtml}</div>
+                    ${feedbackHtml}
+                `;
+                container.appendChild(card);
+            });
+
+            container.querySelectorAll('button[data-q]:not([disabled])').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const qIdx = Number(btn.dataset.q);
+                    const oIdx = Number(btn.dataset.o);
+                    quizState[qIdx] = oIdx;
+                    updateQuizGateUI();
+                    renderSafetyQuiz();
+                });
+            });
+        }
+
+        function updateQuizGateUI() {
+            const { answeredCount, correctCount, scorePercent, allAnswered, passed } = getQuizStats();
+            const pill = document.getElementById('check-score-pill');
+            const banner = document.getElementById('quiz-gate-banner');
+            const gateTitle = document.getElementById('gate-title');
+            const gateDesc = document.getElementById('gate-desc');
+            const retakeBtn = document.getElementById('retake-quiz-btn');
+            const proceedBtn = document.getElementById('proceed-sign-btn');
+            const navStep5 = document.getElementById('nav-step-5');
+
+            pill.textContent = `ציון נוכחי: ${scorePercent} (${correctCount} מתוך ${safetyQuestions.length})`;
+
+            if (!allAnswered) {
+                pill.className = 'px-3 py-1 rounded-full bg-blue-50 text-blue-700 text-xs font-bold';
+                banner.className = 'bg-white rounded-2xl border border-slate-200 p-5 shadow-sm';
+                gateTitle.textContent = '🔒 טופס החתימה נעול עד להשלמת המבדק בציון מעל 79';
+                gateTitle.className = 'font-extrabold text-base text-slate-900';
+                gateDesc.textContent = `ענית על ${answeredCount} מתוך ${safetyQuestions.length} שאלות. השלם את שאר השאלות לבדיקת הזכאות לחתימה.`;
+                retakeBtn.classList.add('hidden');
+                proceedBtn.disabled = true;
+                proceedBtn.className = 'px-5 py-3 rounded-xl bg-slate-200 text-slate-400 font-bold text-sm cursor-not-allowed transition-all';
+                proceedBtn.textContent = '🔒 המשך לטופס החתימה';
+                navStep5.textContent = '🔒 5. הצהרה וחתימה';
+                navStep5.className = lockedStep5Class;
+            } else if (passed) {
+                pill.className = 'px-3 py-1 rounded-full bg-emerald-100 text-emerald-800 text-xs font-bold';
+                banner.className = 'bg-emerald-50 rounded-2xl border border-emerald-300 p-5 shadow-sm';
+                gateTitle.textContent = `✅ עברת בהצלחה! הציון שלך: ${scorePercent} (${correctCount}/${safetyQuestions.length})`;
+                gateTitle.className = 'font-extrabold text-base text-emerald-950';
+                gateDesc.textContent = 'הציון גבוה מ-79. טופס הצהרת הבטיחות פתוח כעת לחתימה.';
+                retakeBtn.classList.add('hidden');
+                proceedBtn.disabled = false;
+                proceedBtn.className = 'px-5 py-3 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold text-sm shadow-sm cursor-pointer transition-all';
+                proceedBtn.textContent = '✍️ המשך לטופס החתימה ⬅';
+                navStep5.textContent = '✍️ 5. הצהרה וחתימה';
+                navStep5.className = (currentStep === 5) ? activeStyles[5] : inactiveClass;
+                document.getElementById('approved-score-badge').textContent = `${scorePercent} (${correctCount}/${safetyQuestions.length})`;
+            } else {
+                pill.className = 'px-3 py-1 rounded-full bg-red-100 text-red-800 text-xs font-bold';
+                banner.className = 'bg-red-50 rounded-2xl border border-red-300 p-5 shadow-sm';
+                gateTitle.textContent = `❌ הציון שלך: ${scorePercent} (${correctCount}/${safetyQuestions.length}) — לא ניתן לעבור לחתימה`;
+                gateTitle.className = 'font-extrabold text-base text-red-950';
+                gateDesc.textContent = 'נדרש ציון מעל 79 (לפחות 5 תשובות נכונות מתוך 6). יש לחזור על הנחיות הבטיחות ולבצע את המבחן מחדש.';
+                retakeBtn.classList.remove('hidden');
+                proceedBtn.disabled = true;
+                proceedBtn.className = 'px-5 py-3 rounded-xl bg-slate-200 text-slate-400 font-bold text-sm cursor-not-allowed transition-all';
+                proceedBtn.textContent = '🔒 טופס החתימה נעול';
+                navStep5.textContent = '🔒 5. הצהרה וחתימה';
+                navStep5.className = lockedStep5Class;
+            }
+        }
+
+        function resetSafetyQuiz() {
+            for (let i = 0; i < quizState.length; i++) {
+                quizState[i] = null;
+            }
+            updateQuizGateUI();
+            renderSafetyQuiz();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function initSignaturePad() {
+            const canvas = document.getElementById('signature-canvas');
+            const ctx = canvas.getContext('2d');
+            ctx.strokeStyle = '#0F172A';
+            ctx.lineWidth = 2.5;
+            ctx.lineCap = 'round';
+            ctx.lineJoin = 'round';
+
+            let drawing = false;
+
+            function getPos(e) {
+                const rect = canvas.getBoundingClientRect();
+                const scaleX = canvas.width / rect.width;
+                const scaleY = canvas.height / rect.height;
+                const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+                const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+                return {
+                    x: (clientX - rect.left) * scaleX,
+                    y: (clientY - rect.top) * scaleY
+                };
+            }
+
+            function startDraw(e) {
+                drawing = true;
+                hasSigned = true;
+                const pos = getPos(e);
+                ctx.beginPath();
+                ctx.moveTo(pos.x, pos.y);
+                if (e.cancelable) e.preventDefault();
+            }
+
+            function draw(e) {
+                if (!drawing) return;
+                const pos = getPos(e);
+                ctx.lineTo(pos.x, pos.y);
+                ctx.stroke();
+                if (e.cancelable) e.preventDefault();
+            }
+
+            function stopDraw() {
+                drawing = false;
+            }
+
+            canvas.addEventListener('mousedown', startDraw);
+            canvas.addEventListener('mousemove', draw);
+            window.addEventListener('mouseup', stopDraw);
+
+            canvas.addEventListener('touchstart', startDraw, { passive: false });
+            canvas.addEventListener('touchmove', draw, { passive: false });
+            canvas.addEventListener('touchend', stopDraw);
+
+            document.getElementById('clear-sig-btn').addEventListener('click', () => {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                hasSigned = false;
+                document.getElementById('signed-confirmation-box').classList.add('hidden');
+            });
+        }
+
+        function initForm() {
+            const dateInput = document.getElementById('sign-date');
+            dateInput.value = new Date().toISOString().split('T')[0];
+
+            document.getElementById('declaration-form').addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const { passed, correctCount, scorePercent } = getQuizStats();
+                if (!passed) {
+                    goToStep(4);
+                    return;
+                }
+
+                const errorBox = document.getElementById('form-error-msg');
+                const confirmBox = document.getElementById('signed-confirmation-box');
+                const cloudStatus = document.getElementById('cloud-sync-status');
+                const submitBtn = document.getElementById('submit-declaration-btn');
+                const name = document.getElementById('student-name').value.trim();
+                const idNum = document.getElementById('student-id').value.trim();
+                const className = document.getElementById('student-class').value.trim();
+                const dateVal = document.getElementById('sign-date').value;
+
+                if (!name || !idNum || !className || !dateVal) {
+                    errorBox.textContent = 'נא למלא את כל שדות החובה (שם מלא, ת"ז, כיתה ותאריך).';
+                    errorBox.classList.remove('hidden');
+                    return;
+                }
+
+                if (!hasSigned) {
+                    errorBox.textContent = 'נא לחתום בתיבת החתימה לפני אישור ההצהרה.';
+                    errorBox.classList.remove('hidden');
+                    return;
+                }
+
+                errorBox.classList.add('hidden');
+                const canvas = document.getElementById('signature-canvas');
+                const signatureDataUrl = canvas.toDataURL('image/png');
+
+                document.getElementById('signed-summary-text').innerHTML = `
+                    התלמיד/ה <strong>${name}</strong> (ת"ז: ${idNum}, כיתה: ${className}) חתם/ה על הצהרת תדריך הבטיחות בתאריך <strong>${dateVal}</strong>.
+                    ציון בבדיקת ההבנה: <strong>${scorePercent} (${correctCount}/${safetyQuestions.length})</strong>.
+                `;
+                confirmBox.classList.remove('hidden');
+                document.getElementById('print-btn').classList.remove('hidden');
+
+                const scriptUrl = (window.GOOGLE_SCRIPT_URL || '').trim();
+                if (scriptUrl.startsWith('https://')) {
+                    submitBtn.disabled = true;
+                    cloudStatus.textContent = '⏳ שולח את הפרטים והחתימה לטבלת המורה...';
+                    try {
+                        await fetch(scriptUrl, {
+                            method: 'POST',
+                            mode: 'no-cors',
+                            headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+                            body: JSON.stringify({
+                                name: name,
+                                idNum: idNum,
+                                className: className,
+                                dateVal: dateVal,
+                                score: `${scorePercent} (${correctCount}/${safetyQuestions.length})`,
+                                signature: signatureDataUrl
+                            })
+                        });
+                        cloudStatus.textContent = '☁️ הפרטים ותמונת החתימה נשלחו ונשמרו בטבלת המורה!';
+                        cloudStatus.className = 'mt-2 text-xs font-bold text-emerald-800';
+                    } catch (err) {
+                        cloudStatus.textContent = '⚠️ אירעה שגיאה בשליחה אוטומטית. נא ללחוץ על "הדפס / שמור כ-PDF" ולשלוח למורה.';
+                        cloudStatus.className = 'mt-2 text-xs font-bold text-amber-800';
+                    } finally {
+                        submitBtn.disabled = false;
+                    }
+                } else {
+                    cloudStatus.textContent = 'ℹ️ שמירה מקומית בלבד (לחצו על "הדפס / שמור כ-PDF" לשמירת העותק).';
+                }
+            });
+        }
+
+        renderSafetyQuiz();
+        updateQuizGateUI();
+        initSignaturePad();
+        initForm();
+    </script>
+</body>
+</html>
